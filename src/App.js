@@ -12,19 +12,29 @@ function App() {
   const [isChecked, setIsChecked] = React.useState(false);
 
   const addTask = () => {
-    dispatch({
-      type: 'ADD_TASK',
-      payload: {
-        text: inputValue,
-        completed: isChecked,
-      },
-    });
-    setInputValue('');
-    setIsChecked(false);
+    if (inputValue.trim()) {
+      dispatch({
+        type: 'ADD_TASK',
+        payload: {
+          text: inputValue,
+          completed: isChecked,
+        },
+      });
+      setInputValue('');
+      setIsChecked(false);
+    }
   };
 
   const onInputChange = (event) => {
     setInputValue(event.target.value);
+  };
+
+  const onDeleteTask = (id) => {
+    if (window.confirm(`Вы хотите удалить "${state.find(item => item.id === id).text}"?`))
+    dispatch({
+      type: 'DELETE_TASK',
+      payload: id,
+    });
   };
 
   const onClickCheckbox = () => {
@@ -53,7 +63,13 @@ function App() {
         <Divider />
         <List>
           {state.map((obj) => (
-            <Item key={obj.id} text={obj.text} completed={obj.completed} />
+            <Item
+              id={obj.id}
+              key={obj.id}
+              text={obj.text}
+              completed={obj.completed}
+              onDelete={onDeleteTask}
+            />
           ))}
         </List>
         <Divider />
