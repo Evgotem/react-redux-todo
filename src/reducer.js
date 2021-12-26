@@ -5,9 +5,8 @@ export function reducer(state, action) {
       return [
         ...state,
         {
-          id: state.length ? state.length : 0,
-          text: action.payload.text,
-          completed: action.payload.completed
+          ...action.payload,
+          id: state.length ? state[state.length-1].id + 1 : 1
         }
       ];
 
