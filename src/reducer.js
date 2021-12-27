@@ -15,6 +15,38 @@ export function reducer(state, action) {
         item.id !== action.payload
       ));
 
+    case 'TOGGLE_COMPLETE':
+      return state.map(obj => {
+        if (obj.id === action.payload) {
+          return {
+            ...obj,
+            completed: !obj.completed
+          }
+        }
+        return obj;
+      })
+
+    case 'CLEAR_ALL_TASKS':
+      return []
+    
+
+    case 'SET_CHECKED_ALL':
+      if (state.every(obj => obj.completed === true)) {
+        return state.map(obj => {
+          return {
+            ...obj,
+            completed: false
+          }
+        })
+      }
+      return state.map(obj => {
+        return {
+          ...obj,
+          completed: true
+        }
+      })
+    
+
     default:
       return state;
   }
