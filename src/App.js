@@ -7,7 +7,6 @@ import { Item } from './components/Item';
 
 function App() {
   const [state, dispatch] = React.useReducer(reducer, []);
-
   const [inputValue, setInputValue] = React.useState('');
   const [isChecked, setIsChecked] = React.useState(false);
 
@@ -25,11 +24,11 @@ function App() {
     }
   };
 
-  const onInputChange = (event) => {
+  const onInputChange = event => {
     setInputValue(event.target.value);
   };
 
-  const onDeleteTask = (id) => {
+  const onDeleteTask = id => {
     if (window.confirm(`Вы хотите удалить "${state.find(item => item.id === id).text}"?`))
     dispatch({
       type: 'DELETE_TASK',
@@ -40,6 +39,25 @@ function App() {
   const onClickCheckbox = () => {
     setIsChecked(!isChecked);
   };
+
+  const toggleComplete = id => {
+    dispatch({
+      type: 'TOGGLE_COMPLETE',
+      payload: id,
+    });
+  }
+
+  const clearAllTasks = () => {
+    dispatch({
+      type:'CLEAR_ALL_TASKS'
+    })
+  }
+
+  const setCheckedAll = () => {
+    dispatch({
+      type:'SET_CHECKED_ALL'
+    })
+  }
 
   return (
     <div className="App">
@@ -64,18 +82,26 @@ function App() {
         <List>
           {state.map((obj) => (
             <Item
-              id={obj.id}
               key={obj.id}
               text={obj.text}
               completed={obj.completed}
-              onDelete={onDeleteTask}
+              onDelete={() => onDeleteTask(obj.id)}
+              onClickChecked={() => toggleComplete(obj.id)}
             />
           ))}
         </List>
         <Divider />
         <div className="check-buttons">
-          <Button>Отметить всё</Button>
-          <Button>Очистить</Button>
+          <Button onClick={setCheckedAll}>
+            {
+              state.every(obj => obj.completed === true) 
+              ? 
+              'Снять отметки'
+              :
+             'Отметить все'
+            }
+          </Button>
+          <Button onClick={clearAllTasks}>Очистить все</Button>
         </div>
       </Paper>
     </div>
