@@ -9,6 +9,13 @@ function App() {
   const [state, dispatch] = React.useReducer(reducer, []);
   const [inputValue, setInputValue] = React.useState('');
   const [isChecked, setIsChecked] = React.useState(false);
+  const [filterBy, setFilterBy] = React.useState('all');
+
+  const filterIndex = {
+    'all': 0,
+    'active': 1,
+    'completed': 2
+  }
 
   const addTask = () => {
     if (inputValue.trim()) {
@@ -30,10 +37,10 @@ function App() {
 
   const onDeleteTask = id => {
     if (window.confirm(`Вы хотите удалить "${state.find(item => item.id === id).text}"?`))
-    dispatch({
-      type: 'DELETE_TASK',
-      payload: id,
-    });
+      dispatch({
+        type: 'DELETE_TASK',
+        payload: id,
+      });
   };
 
   const onClickCheckbox = () => {
@@ -48,14 +55,16 @@ function App() {
   }
 
   const clearAllTasks = () => {
-    dispatch({
-      type:'CLEAR_ALL_TASKS'
-    })
+    if (window.confirm('Удалить все задачи?')) {
+      dispatch({
+        type: 'CLEAR_ALL_TASKS'
+      })
+    }
   }
 
   const setCheckedAll = () => {
     dispatch({
-      type:'SET_CHECKED_ALL'
+      type: 'SET_CHECKED_ALL'
     })
   }
 
@@ -73,14 +82,22 @@ function App() {
           onInputChange={onInputChange}
         />
         <Divider />
-        <Tabs value={0}>
-          <Tab label="Все" />
-          <Tab label="Активные" />
-          <Tab label="Завершённые" />
+        <Tabs value={filterIndex[filterBy]}>
+          <Tab onClick={() => setFilterBy('all')} label="Все" />
+          <Tab onClick={() => setFilterBy('active')} label="Активные" />
+          <Tab onClick={() => setFilterBy('completed')} label="Завершённые" />
         </Tabs>
         <Divider />
         <List>
-          {state.map((obj) => (
+          {state.filter(obj => {
+            if (filterBy === 'completed') {
+              return obj.completed;
+            }
+            if (filterBy === 'active') {
+              return !obj.completed;
+            }
+            return true;
+          }).map((obj) => (
             <Item
               key={obj.id}
               text={obj.text}
@@ -92,16 +109,16 @@ function App() {
         </List>
         <Divider />
         <div className="check-buttons">
-          <Button onClick={setCheckedAll}>
+          <Button disabled={!state.length} onClick={setCheckedAll}>
             {
-              state.every(obj => obj.completed === true) 
-              ? 
-              'Снять отметки'
-              :
-             'Отметить все'
+              state.every(obj => obj.completed === true)
+                ?
+                'Снять отметки'
+                :
+                'Отметить все'
             }
           </Button>
-          <Button onClick={clearAllTasks}>Очистить все</Button>
+          <Button disabled={!state.length} onClick={clearAllTasks}>Очистить все</Button>
         </div>
       </Paper>
     </div>
