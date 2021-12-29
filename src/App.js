@@ -68,6 +68,18 @@ function App() {
     })
   }
 
+  const updateTask = id => {
+    let updateText = prompt('Изменить текст задачи?', [state.find(obj => obj.id === id).text])
+
+    dispatch({
+      type: 'UPDATE_TASK',
+      payload: {
+        id,
+        updateText
+      }
+    })
+  }
+
   return (
     <div className="App">
       <Paper className="wrapper">
@@ -104,6 +116,7 @@ function App() {
               completed={obj.completed}
               onDelete={() => onDeleteTask(obj.id)}
               onClickChecked={() => toggleComplete(obj.id)}
+              updateTask={() => updateTask(obj.id)}
             />
           ))}
         </List>

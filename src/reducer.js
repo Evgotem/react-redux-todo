@@ -45,6 +45,16 @@ export function reducer(state, action) {
         }
       })
 
+    case 'UPDATE_TASK':
+      return state.map(obj => {
+        return obj.id === action.payload.id ?
+          {
+            ...obj,
+            text: action.payload.updateText
+          }
+          :
+          obj;
+      })
 
     default:
       return state;
