@@ -6,7 +6,7 @@ export function reducer(state, action) {
         ...state,
         {
           ...action.payload,
-          id: state.length ? state[state.length-1].id + 1 : 1
+          id: state.length ? state[state.length - 1].id + 1 : 1
         }
       ];
 
@@ -16,19 +16,18 @@ export function reducer(state, action) {
       ));
 
     case 'TOGGLE_COMPLETE':
-      return state.map(obj => {
-        if (obj.id === action.payload) {
-          return {
-            ...obj,
-            completed: !obj.completed
-          }
+      return state.map(obj => obj.id === action.payload
+        ?
+        {
+          ...obj,
+          completed: !obj.completed
         }
-        return obj;
-      })
+        :
+        obj
+      );
 
     case 'CLEAR_ALL_TASKS':
-      return []
-    
+      return [];
 
     case 'SET_CHECKED_ALL':
       if (state.every(obj => obj.completed === true)) {
@@ -45,7 +44,17 @@ export function reducer(state, action) {
           completed: true
         }
       })
-    
+
+    case 'UPDATE_TASK':
+      return state.map(obj => {
+        return obj.id === action.payload.id ?
+          {
+            ...obj,
+            text: action.payload.updateText
+          }
+          :
+          obj;
+      })
 
     default:
       return state;
