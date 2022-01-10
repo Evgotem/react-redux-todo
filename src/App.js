@@ -15,12 +15,7 @@ function App() {
   const [filterBy, setFilterBy] = React.useState('all');
 
   React.useEffect(() => {
-    if (state.length === 0) {
-      localStorage.setItem('state', JSON.stringify([]));
-    } else {
-      console.log(state);
       localStorage.setItem('state', JSON.stringify(state))
-    }
   }, [state])
 
   const filterIndex = {
