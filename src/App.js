@@ -14,7 +14,7 @@ function App() {
   const [filterBy, setFilterBy] = React.useState('all');
 
   React.useEffect(() => {
-    localStorage.setItem('state', JSON.stringify(state))
+    localStorage.setItem('state', JSON.stringify(state.tasks))
   }, [state])
 
   const filterIndex = {
@@ -42,7 +42,7 @@ function App() {
   };
 
   const onDeleteTask = (id) => {
-    if (window.confirm(`Вы хотите удалить "${state.find((item) => item.id === id).text}"?`))
+    if (window.confirm(`Вы хотите удалить "${state.tasks.find((item) => item.id === id).text}"?`))
       dispatch({
         type: 'DELETE_TASK',
         payload: id,
@@ -79,11 +79,12 @@ function App() {
   const setCheckedAll = () => {
     dispatch({
       type: 'SET_CHECKED_ALL',
+      payload: filterBy
     });
   };
 
   const updateTask = (id) => {
-    let updateText = prompt('Изменить текст задачи?', [state.find((obj) => obj.id === id).text]);
+    let updateText = prompt('Изменить текст задачи?', [state.tasks.find((obj) => obj.id === id).text]);
     dispatch({
       type: 'UPDATE_TASK',
       payload: {
@@ -94,13 +95,13 @@ function App() {
   };
 
   const isDisabled = () => {
-    if (filterBy === 'all' && state.length === 0) {
+    if (filterBy === 'all' && state.tasks.length === 0) {
       return true;
     }
-    if (filterBy === 'active' && state.every((item) => item.completed === true)) {
+    if (filterBy === 'active' && state.tasks.every((item) => item.completed === true)) {
       return true;
     }
-    if (filterBy === 'completed' && state.every((item) => item.completed === false)) {
+    if (filterBy === 'completed' && state.tasks.every((item) => item.completed === false)) {
       return true;
     }
     return false;
@@ -127,7 +128,7 @@ function App() {
         </Tabs>
         <Divider />
         <List>
-          {state
+          {state.tasks
             .filter((obj) => {
               if (filterBy === 'completed') {
                 return obj.completed;
@@ -151,7 +152,7 @@ function App() {
         <Divider />
         <div className="check-buttons">
           <Button disabled={isDisabled()} onClick={setCheckedAll}>
-            {state.every((obj) => obj.completed === true) ? 'Снять отметки' : 'Отметить все'}
+            {state.tasks.every((obj) => obj.completed === true) ? 'Снять отметки' : 'Отметить все'}
           </Button>
           <Button disabled={isDisabled()} onClick={clearAllTasks}>
             Очистить все

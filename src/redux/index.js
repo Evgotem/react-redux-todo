@@ -1,70 +1,10 @@
-import { createStore } from 'redux';
+import { createStore, combineReducers } from 'redux';
+import { tasksReducer } from './reducers/tasks';
 
-export function reducer(state, action) {
-  switch (action.type) {
-    case 'ADD_TASK':
-      return [
-        ...state,
-        {
-          ...action.payload,
-          id: state.length ? state[state.length - 1].id + 1 : 1,
-        },
-      ];
+const rootReducer = combineReducers({
+  tasks: tasksReducer
+})
 
-    case 'DELETE_TASK':
-      return state.filter((item) => item.id !== action.payload);
-
-    case 'TOGGLE_COMPLETE':
-      return state.map((obj) =>
-        obj.id === action.payload
-          ? {
-              ...obj,
-              completed: !obj.completed,
-            }
-          : obj,
-      );
-
-    case 'CLEAR_ALL_TASKS':
-      if (action.payload === 'active') {
-        return state.filter((item) => item.completed === true);
-      }
-      if (action.payload === 'completed') {
-        return state.filter((item) => item.completed === false);
-      }
-      return [];
-
-    case 'SET_CHECKED_ALL':
-      if (state.every((obj) => obj.completed === true)) {
-        return state.map((obj) => {
-          return {
-            ...obj,
-            completed: false,
-          };
-        });
-      }
-      return state.map((obj) => {
-        return {
-          ...obj,
-          completed: true,
-        };
-      });
-
-    case 'UPDATE_TASK':
-      return state.map((obj) => {
-        return obj.id === action.payload.id
-          ? {
-              ...obj,
-              text: action.payload.updateText,
-            }
-          : obj;
-      });
-
-    default:
-      return state;
-  }
-}
-
-const initialState = JSON.parse(localStorage.getItem('state'));
-const store = createStore(reducer, initialState);
-
+const store = createStore(rootReducer);
+console.log(store.getState());
 export default store;
