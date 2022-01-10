@@ -68,3 +68,4 @@ const initialState = JSON.parse(localStorage.getItem('state'));
 const store = createStore(reducer, initialState);
 
 export default store;
+

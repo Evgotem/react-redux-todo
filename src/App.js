@@ -18,6 +18,7 @@ function App() {
     if (state.length === 0) {
       localStorage.setItem('state', JSON.stringify([]));
     } else {
+      console.log(state);
       localStorage.setItem('state', JSON.stringify(state))
     }
   }, [state])
