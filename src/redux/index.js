@@ -64,7 +64,8 @@ export function reducer(state, action) {
   }
 }
 
-const initialState = JSON.parse(localStorage.getItem('state'));
+// const initialState = JSON.parse(localStorage.getItem('state'));
+const initialState = [];
 const store = createStore(reducer, initialState);
 
 export default store;

@@ -14,9 +14,9 @@ function App() {
   const [isChecked, setIsChecked] = React.useState(false);
   const [filterBy, setFilterBy] = React.useState('all');
 
-  React.useEffect(() => {
-      localStorage.setItem('state', JSON.stringify(state))
-  }, [state])
+  // React.useEffect(() => {
+  //     localStorage.setItem('state', JSON.stringify(state))
+  // }, [state])
 
   const filterIndex = {
     all: 0,
