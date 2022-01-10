@@ -5,6 +5,7 @@ import { AddField } from './components/AddField';
 import { Item } from './components/Item';
 import { useSelector, useDispatch } from 'react-redux';
 
+
 function App() {
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
@@ -14,7 +15,11 @@ function App() {
   const [filterBy, setFilterBy] = React.useState('all');
 
   React.useEffect(() => {
-    localStorage.setItem('state', JSON.stringify(state))
+    if (state.length === 0) {
+      localStorage.setItem('state', JSON.stringify([]));
+    } else {
+      localStorage.setItem('state', JSON.stringify(state))
+    }
   }, [state])
 
   const filterIndex = {
