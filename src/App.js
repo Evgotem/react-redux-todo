@@ -4,6 +4,7 @@ import { Paper, Divider, Button, List, Tabs, Tab } from '@mui/material';
 import { AddField } from './components/AddField';
 import { Item } from './components/Item';
 import { useSelector, useDispatch } from 'react-redux';
+import { addTask, clearAllTasks, deleteTask, setCheckedAll, toggleComplete, updateTask } from './redux/actions/tasks';
 
 
 function App() {
@@ -24,15 +25,9 @@ function App() {
     completed: 2,
   };
 
-  const addTask = () => {
+  const handleClickAdd = () => {
     if (inputValue.trim()) {
-      dispatch({
-        type: 'ADD_TASK',
-        payload: {
-          text: inputValue,
-          completed: isChecked,
-        },
-      });
+      dispatch(addTask(inputValue, isChecked));
       setInputValue('');
       setIsChecked(false);
     }
@@ -42,26 +37,20 @@ function App() {
     setInputValue(event.target.value);
   };
 
-  const onDeleteTask = (id) => {
+  const handleClickDelete = (id) => {
     if (window.confirm(`Вы хотите удалить "${state.tasks.find((item) => item.id === id).text}"?`))
-      dispatch({
-        type: 'DELETE_TASK',
-        payload: id,
-      });
+      dispatch(deleteTask(id));
   };
 
   const onClickCheckbox = () => {
     setIsChecked(!isChecked);
   };
 
-  const toggleComplete = (id) => {
-    dispatch({
-      type: 'TOGGLE_COMPLETE',
-      payload: id,
-    });
+  const onClickChecked = (id) => {
+    dispatch(toggleComplete(id));
   };
 
-  const clearAllTasks = () => {
+  const handleClearAll = () => {
     let deleteText = 'Удалить все задачи?';
     if (filterBy === 'active') {
       deleteText = 'Удалить все активные задачи?';
@@ -70,29 +59,17 @@ function App() {
       deleteText = 'Удалить все завершенные задачи?';
     }
     if (window.confirm(deleteText)) {
-      dispatch({
-        type: 'CLEAR_ALL_TASKS',
-        payload: filterBy,
-      });
+      dispatch(clearAllTasks(filterBy));
     }
   };
 
-  const setCheckedAll = () => {
-    dispatch({
-      type: 'SET_CHECKED_ALL',
-      payload: filterBy
-    });
+  const onClickCheckedAll = () => {
+    dispatch(setCheckedAll(filterBy));
   };
 
-  const updateTask = (id) => {
+  const handleTaskUpdate = (id) => {
     let updateText = prompt('Изменить текст задачи?', [state.tasks.find((obj) => obj.id === id).text]);
-    dispatch({
-      type: 'UPDATE_TASK',
-      payload: {
-        id,
-        updateText,
-      },
-    });
+    dispatch(updateTask(id, updateText));
   };
 
   const isDisabled = () => {
@@ -118,7 +95,7 @@ function App() {
           inputValue={inputValue}
           isChecked={isChecked}
           onClickCheckbox={onClickCheckbox}
-          onClickAdd={addTask}
+          onClickAdd={handleClickAdd}
           onInputChange={onInputChange}
         />
         <Divider />
@@ -144,18 +121,18 @@ function App() {
                 key={obj.id}
                 text={obj.text}
                 completed={obj.completed}
-                onDelete={() => onDeleteTask(obj.id)}
-                onClickChecked={() => toggleComplete(obj.id)}
-                updateTask={() => updateTask(obj.id)}
+                onDelete={() => handleClickDelete(obj.id)}
+                onClickChecked={() => onClickChecked(obj.id)}
+                updateTask={() => handleTaskUpdate(obj.id)}
               />
             ))}
         </List>
         <Divider />
         <div className="check-buttons">
-          <Button disabled={isDisabled()} onClick={setCheckedAll}>
+          <Button disabled={isDisabled()} onClick={onClickCheckedAll}>
             {state.tasks.every((obj) => obj.completed === true) ? 'Снять отметки' : 'Отметить все'}
           </Button>
-          <Button disabled={isDisabled()} onClick={clearAllTasks}>
+          <Button disabled={isDisabled()} onClick={handleClearAll}>
             Очистить все
           </Button>
         </div>
