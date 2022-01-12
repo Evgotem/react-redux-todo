@@ -1,4 +1,4 @@
-const initialState = JSON.parse(localStorage.getItem('state'));
+const initialState = JSON.parse(localStorage.getItem('state')) ? JSON.parse(localStorage.getItem('state')) : [];
 
 export function tasksReducer(state = initialState, action) {
   switch (action.type) {
