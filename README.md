@@ -4,3 +4,5 @@
 - React
 - Redux
 - LocalStorage
+
+[Link to Github Pages](https://evgotem.github.io/react-redux-todo/)
